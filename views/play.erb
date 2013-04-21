@@ -1,0 +1,58 @@
+<h1>Welcome to Blackjack Web App!</h1>
+
+<h3>Player has:</h3>
+<% session[:player].hand.each do |card| %>
+<img src=<%= "/images/cards/"+card.suit+"_"+card.value+".jpg" %>>
+<% end %>
+<br>
+<h3>Dealer has:</h3>
+<% session[:dealer].hand.each do |card| %>
+<img src=<%= "/images/cards/"+card.suit+"_"+card.value+".jpg" %>>
+<% end %>
+
+<br>
+
+<% if session[:stage] == 'play' %>
+	<h3>Make your choice</h3>
+	<form action="/player_round" method="post">
+		<input type="radio" name="hitstay" value="hit">Hit<br>
+		<input type="radio" name="hitstay" value="stay">Stay<br>
+		<br>
+	  <input type="submit" class="btn"/>
+	</form>
+<% end %>
+
+<% if session[:stage] == 'showdown' %>
+	<h3> Showdown results:</h3>
+	<% if session[:player].value > session[:dealer].value %>
+		<%= "You win with #{session[:player].value} against #{session[:dealer].value}!" %>
+	<% elsif session[:player].value < session[:dealer].value %>
+		<%= "Dealer wins with #{session[:dealer].value} against #{session[:player].value}." %>
+	<% else %>
+		<%= "It's a tie at #{session[:player].value}." %>
+	<% end %>
+<% end %>
+
+<% if session[:stage] == 'endgame' %>
+	<% if session[:dealer].blackjack? %>
+		<h3> Sorry, dealer hits blackjack. You lose. </h3>
+	<% elsif session[:dealer].busted? %>
+		<h3> Congratulations, dealer busted! You win! </h3>
+	<% elsif session[:player].blackjack? %>
+		<h3> Congratulations, you hit blackjack! You win! </h3>
+	<% else %>
+		<h3> Sorry, it looks like you busted. </h3>
+	<% end %>
+<% end %>
+
+<br>
+
+<% if session[:stage] == 'showdown' || session[:stage] == 'endgame' %>
+	<h3> Play again? </h3>
+	<form action="/play_again" method="post">
+		<input type="radio" name="playagain" value="yes">Yes<br>
+		<input type="radio" name="playagain" value="no">No<br>
+		<br>
+	  <input type="submit" class="btn"/>
+	</form>
+<% end %>
