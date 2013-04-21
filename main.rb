@@ -95,7 +95,7 @@ end
 # Web App
 
 get '/' do
-  if session[:player_name]
+  if params['playername']
     redirect '/start'
   else
     redirect '/set_player_name'
