@@ -7,7 +7,11 @@
 <br>
 <h3>Dealer has:</h3>
 <% session[:dealer].hand.each do |card| %>
-<img src=<%= "/images/cards/"+card.suit+"_"+card.value+".jpg" %>>
+	<% if session[:stage] == 'showdown' || session[:stage] == 'endgame' %>
+		<img src=<%= "/images/cards/"+card.suit+"_"+card.value+".jpg" %>>
+	<% else %>
+		<img src=<%= "/images/cards/cover.jpg" %>>
+	<% end %>
 <% end %>
 
 <br>
