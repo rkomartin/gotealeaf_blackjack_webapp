@@ -95,15 +95,11 @@ end
 # Web App
 
 get '/' do
-  if params['playername']
-    redirect '/start'
+  if params['playername'].nil? || params['playername'].empty?
+    erb :set_player_name
   else
-    redirect '/set_player_name'
+    redirect '/start'
   end
-end
-
-get '/set_player_name' do
-  erb :set_player_name
 end
 
 post '/set_player_name' do
@@ -123,11 +119,11 @@ get '/start' do
 
   if session[:player].blackjack?
     session[:stage] = 'endgame'
-    erb :play
   else
     session[:stage] = 'play'
-    erb :play
   end
+
+  erb :play
 end
 
 post '/player_round' do
@@ -139,11 +135,11 @@ post '/player_round' do
 
   if session[:player].blackjack? || session[:player].busted?
     session[:stage] = 'endgame'
-    erb :play
   else
     session[:stage] = 'play'
-    erb :play
   end
+
+  erb :play
 end
 
 get '/dealer_round' do
