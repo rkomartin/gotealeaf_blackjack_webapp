@@ -95,16 +95,21 @@ end
 # Web App
 
 get '/' do
-  if params['playername'].nil? || params['playername'].empty?
-    erb :set_player_name
-  else
+  if session[:player_name]
     redirect '/start'
+  else
+    erb :set_player_name
   end
 end
 
 post '/set_player_name' do
-  session[:player_name] = params['playername']
-  redirect '/start'
+  if params['player_name'].nil? || params['player_name'].empty?
+    @error = "Player name must not be empty!"
+    erb :set_player_name
+  else
+    session[:player_name] = params['player_name']
+    redirect '/start'
+  end
 end
 
 get '/start' do
@@ -127,10 +132,13 @@ get '/start' do
 end
 
 post '/player_round' do
-  if params['hitstay'] == 'stay'
+  if params['hit_stay'] == 'stay'
     redirect '/dealer_round'
-  else
+  elsif params['hit_stay'] == 'hit'
     session[:player] << session[:deck].deal
+  else
+    @error = "Hit or Stay must be selected!"
+    erb :play
   end
 
   if session[:player].blackjack? || session[:player].busted?
@@ -156,22 +164,27 @@ get '/dealer_round' do
     session[:stage] = 'endgame'
     erb :play
   else
-    redirect '/showdown'
+    session[:stage] = 'showdown'
+    erb :play
   end
 end
 
-get '/showdown' do
-  session[:stage] = 'showdown'
-  erb :play
-end
-
 post '/play_again' do
-  if params['playagain'] == 'yes'
+  if params['play_again'] == 'yes'
     temp = session[:player_name]
     session.clear
     session[:player_name] = temp
     redirect '/start'
-  else
+  elsif params['play_again'] == 'no'
+    session.clear
     erb :bye
+  else
+    @error = "Yes or No must be selected!"
+    erb :play
   end
+end
+
+get '/quit' do
+    session.clear
+    erb :bye
 end
