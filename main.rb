@@ -94,6 +94,12 @@ end
 
 # Web App
 
+helpers do
+  def show_card(card)
+    "<img src='/images/cards/#{card.suit}_#{card.value}.jpg' class=card_image >"
+  end
+end
+
 get '/' do
   if session[:player_name]
     redirect '/start'
