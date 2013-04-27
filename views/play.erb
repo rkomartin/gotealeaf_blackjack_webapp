@@ -18,7 +18,7 @@
   </div>
 
   <div class="well">
-  <h4><%= session[:player_name] %>, you have:</h4>
+  <h4><%= session[:player].name %>, you have:</h4>
   <% session[:player].hand.each do |card| %>
     <%= show_card(card) %>
   <% end %>
@@ -34,14 +34,14 @@
       <input type="radio" name="hit_stay" value="hit">Hit<br>
       <input type="radio" name="hit_stay" value="stay">Stay<br>
       <br>
-      <input type="submit" class="btn btn-primary"/>
+      <input type="submit" class="btn btn-primary" value="Submit"/>
     </form>
   <% end %>
 
   <% if session[:stage] == 'play_d' %>
     <h5>Pot value: EUR <%= "#{2*session[:bet]}" %>. See another dealer card!</h5>
     <form action="/dealer_round" method="post">
-      <input type="submit" class="btn btn-primary" value="Submit"/>
+      <input type="submit" class="btn btn-primary" value="Submit" autofocus/>
     </form>
   <% end %>
 
@@ -84,7 +84,7 @@
       <input type="radio" name="play_again" value="yes">Yes<br>
       <input type="radio" name="play_again" value="no">No<br>
       <br>
-      <input type="submit" class="btn btn-primary"/>
+      <input type="submit" class="btn btn-primary" value="Submit"/>
     </form>
   <% end %>
 </div>

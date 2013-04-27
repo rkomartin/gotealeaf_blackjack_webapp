@@ -3,7 +3,7 @@
 
 	<h4>You have EUR <%= session[:player].amount %>. Bet amount:</h4>
 	<form action="/bet" method="post">
-	  <input type="text" name="bet"/>
+	  <input type="text" name="bet" autofocus/>
 	  <input type="submit" class="btn btn-primary"/>
 	</form>
 </div>

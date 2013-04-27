@@ -112,7 +112,6 @@ helpers do
 
   def player_win
     session[:player].win(2*session[:bet])
-    session[:player_amount] += 2* session[:bet]
   end
 
   def dealer_win
@@ -121,13 +120,12 @@ helpers do
 
   def tie_win
     session[:player].win(session[:bet])
-    session[:player_amount] += session[:bet]
     session[:dealer].win(session[:bet])
   end
 end
 
 get '/' do
-  if session[:player_name]
+  if session[:tmp_player_name]
     redirect '/start'
   else
     erb :set_player_name
@@ -139,16 +137,19 @@ post '/set_player_name' do
     @error = "Player name must not be empty!"
     erb :set_player_name
   else
-    session[:player_name] = params['player_name']
-    session[:player_amount] = PLAYER_AMOUNT
+    session[:tmp_player_name] = params['player_name']
+    session[:tmp_player_amount] = PLAYER_AMOUNT
     redirect '/start'
   end
 end
 
 get '/start' do
-  session[:player] = BJPlayer.new(session[:player_name], session[:player_amount])
+  session[:player] = BJPlayer.new(session[:tmp_player_name], session[:tmp_player_amount])
   session[:dealer] = BJDealer.new("Dealer", DEALER_AMOUNT)
   session[:deck] = Deck.new
+  
+  session[:tmp_player_name] = nil
+  session[:tmp_player_amount] = nil
 
   session[:player] << session[:deck].deal
   session[:dealer] << session[:deck].deal
@@ -171,7 +172,6 @@ post '/bet' do
     erb :bet
   else
     session[:bet] = params["bet"].to_i
-    session[:player_amount] -= session[:bet]
     session[:player].bet(session[:bet])
     session[:dealer].bet(session[:bet])
 
@@ -236,14 +236,14 @@ post '/dealer_round' do
 end
 
 post '/play_again' do
-  if params['play_again'] == 'yes' && session[:player_amount] != 0
+  if params['play_again'] == 'yes' && session[:player].amount != 0
     temp_n = session[:player].name
     temp_a = session[:player].amount
     session.clear
-    session[:player_name] = temp_n
-    session[:player_amount] = temp_a
+    session[:tmp_player_name] = temp_n
+    session[:tmp_player_amount] = temp_a
     redirect '/start'
-  elsif params['play_again'] == 'yes' && session[:player_amount] == 0
+  elsif params['play_again'] == 'yes' && session[:player].amount == 0
     @error = "We know you said Yes. But you're broken..."
     erb :play
   elsif params['play_again'] == 'no'
