@@ -128,6 +128,10 @@ get '/start' do
   session[:player] << session[:deck].deal
   session[:dealer] << session[:deck].deal
 
+  redirect '/player_round'
+end
+
+get '/player_round' do
   if session[:player].blackjack?
     session[:stage] = 'endgame'
   else
@@ -171,7 +175,7 @@ end
 
 post '/dealer_round' do
   session[:dealer] << session[:deck].deal
-  
+
   if session[:dealer].blackjack? || session[:dealer].busted?
     session[:stage] = 'endgame'
   elsif session[:dealer].must_play?
@@ -190,8 +194,7 @@ post '/play_again' do
     session[:player_name] = temp
     redirect '/start'
   elsif params['play_again'] == 'no'
-    session.clear
-    erb :bye
+    redirect '/quit'
   else
     @error = "Yes or No must be selected!"
     erb :play
