@@ -28,7 +28,8 @@
 
 <div class="container">
   <% if session[:stage] == 'play_p' %>
-    <h5>Make your choice</h5>
+    <h5>Pot value: 
+      <%= "#{2*session[:bet]}" %>. Make your choice</h5>
     <form action="/player_round" method="post">
       <input type="radio" name="hit_stay" value="hit">Hit<br>
       <input type="radio" name="hit_stay" value="stay">Stay<br>
@@ -38,7 +39,7 @@
   <% end %>
 
   <% if session[:stage] == 'play_d' %>
-    <h5>See another dealer card!</h5>
+    <h5>Pot value: EUR <%= "#{2*session[:bet]}" %>. See another dealer card!</h5>
     <form action="/dealer_round" method="post">
       <input type="submit" class="btn btn-primary" value="Submit"/>
     </form>
@@ -48,23 +49,33 @@
     <h5> Showdown results:</h5>
     <% if session[:player].value > session[:dealer].value %>
       <%= "You win with #{session[:player].value} against #{session[:dealer].value}!" %>
+      <% player_win %>
     <% elsif session[:player].value < session[:dealer].value %>
       <%= "Dealer wins with #{session[:dealer].value} against #{session[:player].value}." %>
+      <% dealer_win %>
     <% else %>
       <%= "It's a tie at #{session[:player].value}." %>
+      <% tie_win %>
     <% end %>
+    <%= "You have EUR #{session[:player].amount} in your pocket" %>
   <% end %>
 
   <% if session[:stage] == 'endgame' %>
+    <h5> Endgame results:</h5>
     <% if session[:dealer].blackjack? %>
-      <h5> Sorry, dealer hits blackjack. You lose. </h5>
+      Sorry, dealer hits blackjack. You lose.
+      <% dealer_win %>
     <% elsif session[:dealer].busted? %>
-      <h5> Congratulations, dealer busted! You win! </h5>
+      Congratulations, dealer busted! You win!
+      <% player_win %>
     <% elsif session[:player].blackjack? %>
-      <h5> Congratulations, you hit blackjack! You win! </h5>
+      Congratulations, you hit blackjack! You win!
+      <% player_win %>
     <% else %>
-      <h5> Sorry, it looks like you busted. </h5>
+      Sorry, it looks like you busted.
+      <% dealer_win %>
     <% end %>
+    <%= "You have EUR #{session[:player].amount} in your pocket" %>
   <% end %>
 
   <% if session[:stage] == 'showdown' || session[:stage] == 'endgame' %>
