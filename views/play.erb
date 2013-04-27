@@ -1,14 +1,5 @@
 <div class="container">
   <div class="well">
-  <h4><%= session[:player_name] %> has:</h4>
-  <% session[:player].hand.each do |card| %>
-    <%= show_card(card) %>
-  <% end %>
-  </div>
-
-  <br>
-
-  <div class="well">
   <h4>Dealer has:</h4>
   <% session[:dealer].hand.each_with_index do |card, index| %>
     <% if session[:stage] == 'showdown' || session[:stage] == 'endgame' %>
@@ -21,6 +12,17 @@
       <% end %>
     <% end %>
   <% end %>
+  <% if session[:stage] == 'showdown' || session[:stage] == 'endgame' %>
+    <h4><%= "Dealer has #{session[:dealer].value} points" %></h4>
+  <% end %>
+  </div>
+
+  <div class="well">
+  <h4><%= session[:player_name] %>, you have:</h4>
+  <% session[:player].hand.each do |card| %>
+    <%= show_card(card) %>
+  <% end %>
+  <h4><%= "You have #{session[:player].value} points" %></h4>
   </div>
 </div>
 
@@ -57,8 +59,6 @@
       <h4> Sorry, it looks like you busted. </h4>
     <% end %>
   <% end %>
-
-  <br>
 
   <% if session[:stage] == 'showdown' || session[:stage] == 'endgame' %>
     <h4> Play again? </h4>
