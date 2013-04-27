@@ -131,7 +131,7 @@ get '/start' do
   if session[:player].blackjack?
     session[:stage] = 'endgame'
   else
-    session[:stage] = 'play'
+    session[:stage] = 'play_p'
   end
 
   erb :play
@@ -139,6 +139,7 @@ end
 
 post '/player_round' do
   if params['hit_stay'] == 'stay'
+    session[:stage] = 'play_d'
     redirect '/dealer_round'
   elsif params['hit_stay'] == 'hit'
     session[:player] << session[:deck].deal
@@ -150,7 +151,7 @@ post '/player_round' do
   if session[:player].blackjack? || session[:player].busted?
     session[:stage] = 'endgame'
   else
-    session[:stage] = 'play'
+    session[:stage] = 'play_p'
   end
 
   erb :play
@@ -159,20 +160,27 @@ end
 get '/dealer_round' do
   if session[:dealer].blackjack?
     session[:stage] = 'endgame'
-    erb :play
-  else
-    while session[:dealer].must_play?
-      session[:dealer] << session[:deck].deal
-    end
-  end
-
-  if session[:dealer].blackjack? || session[:dealer].busted?
-    session[:stage] = 'endgame'
-    erb :play
+  elsif session[:dealer].must_play?
+    session[:stage] = 'play_d'
   else
     session[:stage] = 'showdown'
-    erb :play
   end
+
+  erb :play
+end
+
+post '/dealer_round' do
+  session[:dealer] << session[:deck].deal
+  
+  if session[:dealer].blackjack? || session[:dealer].busted?
+    session[:stage] = 'endgame'
+  elsif session[:dealer].must_play?
+    session[:stage] = 'play_d'
+  else
+    session[:stage] = 'showdown'
+  end
+
+  erb :play
 end
 
 post '/play_again' do

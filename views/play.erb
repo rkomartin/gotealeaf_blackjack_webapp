@@ -2,7 +2,7 @@
   <div class="well">
   <h4>Dealer has:</h4>
   <% session[:dealer].hand.each_with_index do |card, index| %>
-    <% if session[:stage] == 'showdown' || session[:stage] == 'endgame' %>
+    <% if session[:stage] != 'play_p' %>
       <%= show_card(card) %>
     <% else %>
       <% if index == 0 %>
@@ -12,8 +12,8 @@
       <% end %>
     <% end %>
   <% end %>
-  <% if session[:stage] == 'showdown' || session[:stage] == 'endgame' %>
-    <h4><%= "Dealer has #{session[:dealer].value} points" %></h4>
+  <% if session[:stage] != 'play_p' %>
+    <h5><%= "Dealer has #{session[:dealer].value} points" %></h5>
   <% end %>
   </div>
 
@@ -22,13 +22,13 @@
   <% session[:player].hand.each do |card| %>
     <%= show_card(card) %>
   <% end %>
-  <h4><%= "You have #{session[:player].value} points" %></h4>
+  <h5><%= "You have #{session[:player].value} points" %></h5>
   </div>
 </div>
 
 <div class="container">
-  <% if session[:stage] == 'play' %>
-    <h4>Make your choice</h4>
+  <% if session[:stage] == 'play_p' %>
+    <h5>Make your choice</h5>
     <form action="/player_round" method="post">
       <input type="radio" name="hit_stay" value="hit">Hit<br>
       <input type="radio" name="hit_stay" value="stay">Stay<br>
@@ -37,8 +37,15 @@
     </form>
   <% end %>
 
+  <% if session[:stage] == 'play_d' %>
+    <h5>See another dealer card!</h5>
+    <form action="/dealer_round" method="post">
+      <input type="submit" class="btn btn-primary" value="Submit"/>
+    </form>
+  <% end %>
+
   <% if session[:stage] == 'showdown' %>
-    <h4> Showdown results:</h4>
+    <h5> Showdown results:</h5>
     <% if session[:player].value > session[:dealer].value %>
       <%= "You win with #{session[:player].value} against #{session[:dealer].value}!" %>
     <% elsif session[:player].value < session[:dealer].value %>
@@ -50,18 +57,18 @@
 
   <% if session[:stage] == 'endgame' %>
     <% if session[:dealer].blackjack? %>
-      <h4> Sorry, dealer hits blackjack. You lose. </h4>
+      <h5> Sorry, dealer hits blackjack. You lose. </h5>
     <% elsif session[:dealer].busted? %>
-      <h4> Congratulations, dealer busted! You win! </h4>
+      <h5> Congratulations, dealer busted! You win! </h5>
     <% elsif session[:player].blackjack? %>
-      <h4> Congratulations, you hit blackjack! You win! </h4>
+      <h5> Congratulations, you hit blackjack! You win! </h5>
     <% else %>
-      <h4> Sorry, it looks like you busted. </h4>
+      <h5> Sorry, it looks like you busted. </h5>
     <% end %>
   <% end %>
 
   <% if session[:stage] == 'showdown' || session[:stage] == 'endgame' %>
-    <h4> Play again? </h4>
+    <h5> Play again? </h5>
     <form action="/play_again" method="post">
       <input type="radio" name="play_again" value="yes">Yes<br>
       <input type="radio" name="play_again" value="no">No<br>
