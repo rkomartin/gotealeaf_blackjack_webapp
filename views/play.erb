@@ -41,7 +41,7 @@
   <% if session[:stage] == 'play_d' %>
     <h5>Pot value: EUR <%= "#{2*session[:bet]}" %>. See another dealer card!</h5>
     <form action="/dealer_round" method="post">
-      <input type="submit" class="btn btn-primary" value="Submit" autofocus/>
+      <input type="submit" class="btn btn-primary" value="Submit &rarr;" autofocus/>
     </form>
   <% end %>
 
