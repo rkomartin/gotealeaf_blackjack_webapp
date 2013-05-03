@@ -1,5 +1,5 @@
 task :default => [:main]
 
 task :main do
-  ruby "main.rb"
+  puts "All done here!"
 end
