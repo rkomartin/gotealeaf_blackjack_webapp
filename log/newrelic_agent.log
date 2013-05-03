@@ -1,0 +1,12 @@
+# Logfile created on 2013-05-03 22:34:59 +0300 by logger.rb/31641
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] INFO : Starting the New Relic agent in "development" environment.
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] INFO : To prevent agent startup add a NEWRELIC_ENABLE=false environment variable or modify the "development" section of your newrelic.yml.
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] INFO : Reading configuration from newrelic.yml
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] INFO : Environment: development
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] INFO : No known dispatcher detected.
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] INFO : Application: My Application
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] WARN : Agent configured not to send data in this environment.
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] INFO : Installing Net instrumentation
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] INFO : Installing Sinatra instrumentation
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] INFO : Finished instrumentation
+[05/03/13 22:34:59 +0300 RONBMGM12 (6520)] WARN : Failed to determine processor count, assuming 1
